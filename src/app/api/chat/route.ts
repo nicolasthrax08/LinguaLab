@@ -2,8 +2,8 @@
  * POST /api/chat
  *
  * Handles a single practice turn:
- *  1. Generates the AI role-play reply using Gemini.
- *  2. Generates structured three-layer feedback using Gemini + JSON schema.
+ *  1. Generates the AI role-play reply using OpenRouter.
+ *  2. Generates structured three-layer feedback using OpenRouter + JSON schema.
  *  3. Persists messages and feedback in Supabase (if configured).
  *  4. Returns { assistant_message, feedback, session_id, message_id }.
  */
@@ -14,7 +14,7 @@ import {
   buildFeedbackSystemPrompt,
   FALLBACK_FEEDBACK,
 } from "@/lib/prompts";
-import { generateJson, generateText } from "@/lib/gemini";
+import { generateJson, generateText } from "@/lib/openrouter";
 import { createServerClient } from "@/lib/supabase";
 import {
   ChatMessage,
@@ -53,7 +53,7 @@ export async function POST(request: NextRequest) {
 
   try {
     // Optional demo/mock mode: returns a canned reply when MOCK_CHAT=true.
-    // Useful for hackathon demos if the Gemini free-tier quota runs out.
+    // Useful for hackathon demos if the OpenRouter quota runs out.
     if (process.env.MOCK_CHAT === "true") {
       const mockResponse = getMockResponse(scenario_id, message);
       return NextResponse.json(mockResponse);
